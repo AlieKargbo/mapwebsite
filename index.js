@@ -1,3 +1,5 @@
+const btn = document.getElementById('find-me')
+
 var mymap = L.map('mapid').setView([8.465677, -13.231722], 13);
 
 L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
@@ -9,46 +11,46 @@ L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
     accessToken: 'pk.eyJ1Ijoic3VwMjAwMSIsImEiOiJja2FqM3UwcXIwNnZmMnFwamZ5bmNtdjRtIn0.jFb6Xm3zhBDtt5tbuvEuVQ'
 }).addTo(mymap);
 
-var popup = L.popup();
+btn.addEventListener("click", () => {
+
+    var options = {
+        enableHighAccuracy: true,
+        timeout: 5000,
+        maximumAge: 0
+    };
+    
+    function success(pos) {
+        var crd = pos.coords;
+  
+       alert('Your current position is:');
+       alert(`Latitude : ${crd.latitude}`);
+       alert(`Longitude: ${crd.longitude}`);
+      alert(`More or less ${crd.accuracy} meters.`);
+    }
+  
+    function error(err) {
+        console.warn(`ERROR(${err.code}): ${err.message}`);
+    }
+  
+    navigator.geolocation.getCurrentPosition(success, error, options);
+  
+})
+
+
+
+var popup = L.popup()
+.setLatLng([8.460555, -13.231722])
+.setContent("I am a standalone popup.")
+.openOn(mymap);
+
 
 function onMapClick(e) {
-    popup
-        .setLatLng(e.latlng)
-        .setContent("You clicked the map at " + e.latlng.toString())
-        .openOn(mymap);
+    console.log("You clicked the map at " + e.latlng);
 }
 
-mymap.on('click', onMapClick);
+mymap.on('click', onMapClick)
 
-function geoFindMe() {
-
-    const status = document.querySelector('#status');
-    const mapLink = document.querySelector('#map-link');
-  
-    mapLink.href = '';
-    mapLink.textContent = '';
-  
-    function success(position) {
-      const latitude  = position.coords.latitude;
-      const longitude = position.coords.longitude;
-  
-      status.textContent = '';
-      mapLink.href = `https://www.openstreetmap.org/#map=18/${latitude}/${longitude}`;
-      mapLink.textContent = `Latitude: ${latitude} °, Longitude: ${longitude} °`;
-    }
-  
-    function error() {
-      status.textContent = 'Unable to retrieve your location';
-    }
-  
-    if(!navigator.geolocation) {
-      status.textContent = 'Geolocation is not supported by your browser';
-    } else {
-      status.textContent = 'Locating…';
-      navigator.geolocation.getCurrentPosition(success, error);
-    }
-  
-  }
-  
-  document.querySelector('#find-me').addEventListener('click', geoFindMe);
-  
+function myFunction() {
+    var element = document.body;
+    element.classList.toggle("dark-mode");
+}
